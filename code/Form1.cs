@@ -93,6 +93,13 @@ namespace OpenBot
 					// Make sure to include your command after implementing to the bot.
 					// If you don't want to, then this is counted as an "easter egg".
 				}
+				else if (m.GetString(1).StartsWith("!8ball "))
+				{
+					int rng = new Random().Next(0, 2);
+					if (rng == 0) con.Send("say", "[OpenBot] No.");
+					else if (rng == 1) con.Send("say", "[OpenBot] Yes.");
+					else if (rng == 2) con.Send("say", "[OpenBot] I don't know!");
+				}
 			}
 			else if (m.Type == "init")
 			{
