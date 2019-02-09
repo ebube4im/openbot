@@ -20,6 +20,7 @@ namespace OpenBot
 		}
 
 		Connection con;
+		bool snake = false;
 		Client client;
 		bool isConnected = false;
 		int[] ignoresnakers = new int[] { };
@@ -130,6 +131,8 @@ namespace OpenBot
 			}
 			else if (m.Type == "b")
 			{
+				if (!snake) return;
+
 				foreach (int id in ignoresnakers)
 				{
 					if (id == m.GetInt(4))
@@ -140,6 +143,20 @@ namespace OpenBot
 
 				if (m.GetInt(3) == Mineral.Green) Mineral.PlaceBlock(con, Mineral.Colors.Red, m.GetInt(0), m.GetInt(1), m.GetInt(2));
 				else if (m.GetInt(3) == Mineral.Red) Mineral.PlaceBlock(con, Mineral.Colors.None, m.GetInt(0), m.GetInt(1), m.GetInt(2));
+			}
+		}
+
+		private void btnToggle_Click(object sender, EventArgs e)
+		{
+			if (!snake)
+			{
+				snake = true;
+				btnToggle.BackColor = Color.Green;
+			}
+			else
+			{
+				snake = false;
+				btnToggle.BackColor = Color.Red;
 			}
 		}
 	}
