@@ -22,6 +22,7 @@ namespace OpenBot
 		Connection con;
 		Client client;
 		bool isConnected = false;
+		int[] ignoresnakers = new int[] { };
 
 		private void button1_Click(object sender, EventArgs e)
 		{
@@ -93,18 +94,52 @@ namespace OpenBot
 					// Make sure to include your command after implementing to the bot.
 					// If you don't want to, then this is counted as an "easter egg".
 				}
-				else if (m.GetString(1).StartsWith("!8ball "))
+				else if (m.GetString(1) == "!ignoresnake")
 				{
-					int rng = new Random().Next(0, 2);
-					if (rng == 0) con.Send("say", "[OpenBot] No.");
-					else if (rng == 1) con.Send("say", "[OpenBot] Yes.");
-					else if (rng == 2) con.Send("say", "[OpenBot] I don't know!");
+					bool enabled = false;
+					foreach (int id in ignoresnakers)
+					{
+						if (id == m.GetInt(0))
+						{
+							enabled = true;
+							List<int> list = new List<int>();
+							list = ignoresnakers.ToList();
+							list.Remove(m.GetInt(0));
+							ignoresnakers = list.ToArray();
+						}
+					}
+
+					if (!enabled)
+					{
+						List<int> list = new List<int>(); 
+						list = ignoresnakers.ToList();
+						list.Add(m.GetInt(0));
+						ignoresnakers = list.ToArray();
+						con.Send("pm", m.GetInt(0), "[OpenBot] The snake will ignore you.");
+					}
+					else
+					{
+						con.Send("pm", m.GetInt(0), "[OpenBot] The snake will no longer ignore you.");
+					}
 				}
 			}
 			else if (m.Type == "init")
 			{
 				con.Send("say", "[OpenBot] Joined!");
 				con.Send("init2"); // joined successfully
+			}
+			else if (m.Type == "b")
+			{
+				foreach (int id in ignoresnakers)
+				{
+					if (id == m.GetInt(4))
+					{
+						return;
+					}
+				}
+
+				if (m.GetInt(3) == Mineral.Green) Mineral.PlaceBlock(con, Mineral.Colors.Red, m.GetInt(0), m.GetInt(1), m.GetInt(2));
+				else if (m.GetInt(3) == Mineral.Red) Mineral.PlaceBlock(con, Mineral.Colors.None, m.GetInt(0), m.GetInt(1), m.GetInt(2));
 			}
 		}
 	}
